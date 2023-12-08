@@ -1,0 +1,46 @@
+resources:
+  - name: code_analysis_resource
+    type: CodeAnalysis
+    configuration:
+      tool: SonarCloud
+      integration: sonar_int
+
+pipelines:
+  - name: code_analysis_pipe
+    configuration:
+      jfrogCliVersion: 2
+      environmentVariables:
+        readOnly:
+          env2: "test_p2"
+    steps:
+      - name: pre_step
+        type: Bash
+        configuration:
+          outputResources:
+              - name: code_analysis_resource
+        execution:
+          onExecute:
+            - echo "Ran Code analysis step 1"
+      # - name: trigger_1
+      #   type: Bash
+      #   configuration:
+      #     inputSteps:
+      #       - name: pre_step
+      #     integrations:
+      #       - name: rt
+      #     outputResources:
+      #         - name: insight_json_lint_java_module_build_info
+      #   execution:
+      #     onExecute:
+      #       - echo $resource_new_2_path
+           
+      # - name: trigger_2
+      #   type: Bash
+      #   configuration:
+      #     affinityGroup: trigger
+      #     timeoutSeconds: 5
+      #     inputSteps:
+      #       - name: pre_step
+      #   execution:
+      #     onExecute:
+      #       - echo $resource_new_2_path
