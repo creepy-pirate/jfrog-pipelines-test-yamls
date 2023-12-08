@@ -2,7 +2,6 @@ resources:
   - name: code_analysis_resource
     type: CodeAnalysis
     configuration:
-      tool: SonarCloud
       integration: sonar_int
 
 pipelines:
