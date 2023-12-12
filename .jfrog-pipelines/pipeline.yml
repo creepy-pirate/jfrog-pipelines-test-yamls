@@ -10,6 +10,13 @@ resources:
       gitProvider: deepak_git
       branches:
         include: master
+  - name: code_gitrepo_standalone
+    type: GitRepo
+    configuration:
+      path: creepy-pirate/jfrog-pipelines-test-yamls
+      gitProvider: deepak_git
+      branches:
+        include: master
 
 pipelines:
   - name: code_analysis_pipe
@@ -19,24 +26,26 @@ pipelines:
         readOnly:
           env2: "test_p2"
     steps:
-      - name: pre_step
-        type: Bash
-        configuration:
-          outputResources:
-              - name: code_analysis_resource
-        execution:
-          onExecute:
-            - echo "Ran Code analysis step 1"
+      # - name: pre_step
+      #   type: Bash
+      #   configuration:
+      #     outputResources:
+      #         - name: code_analysis_resource
+      #   execution:
+      #     onExecute:
+      #       - echo "Ran Code analysis step 1"
       - name: trigger_1
         type: Bash
         configuration:
           inputResources:
               - name: code_gitrepo
+              - name: code_gitrepo_standalone
           outputResources:
               - name: code_analysis_resource
         execution:
           onExecute:
             - echo "Ran Code analysis step 2"
+            - write_output code_analysis_resource "gitResource=code_gitrepo"
            
       # - name: trigger_2
       #   type: Bash
