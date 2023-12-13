@@ -61,6 +61,7 @@ pipelines:
             - cd $res_code_gitrepo_resourcePath
             - touch hello.txt
             - git add hello.txt
+            - echo "hello" >> hello.txt
             - git commit -m "added hello.txt"
             - git push origin main
            
