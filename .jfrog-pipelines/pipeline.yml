@@ -62,7 +62,7 @@ pipelines:
             - touch hello.txt
             - git add hello.txt
             - git commit -m "added hello.txt"
-            - git push origin 
+            - git push origin main
            
       # - name: trigger_2
       #   type: Bash
