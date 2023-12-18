@@ -58,13 +58,13 @@ pipelines:
           onExecute:
             - echo "Ran Code analysis step 2"
             - write_output code_analysis_resource "gitResource=code_gitrepo"
-            - cd $res_code_gitrepo_resourcePath
-            - git checkout main
-            - touch hello.txt
-            - git add hello.txt
-            - echo "hello" >> hello.txt
-            - git commit -m "added hello.txt"
-            - git push origin main
+            # - cd $res_code_gitrepo_resourcePath
+            # - git checkout main
+            # - touch hello.txt
+            # - git add hello.txt
+            # - echo "hello" >> hello.txt
+            # - git commit -m "added hello.txt"
+            # - git push origin main
            
       # - name: trigger_2
       #   type: Bash
