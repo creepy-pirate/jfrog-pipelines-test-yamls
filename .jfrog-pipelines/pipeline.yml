@@ -54,7 +54,6 @@ pipelines:
         execution:
           onExecute:
             - echo "Ran Code analysis step 2"
-            - write_output code_analysis_resource "gitResource=code_gitrepo_standalone"
             - echo "shashank-taliwal"
             # - cd $res_code_gitrepo_resourcePath
             # - git checkout main
