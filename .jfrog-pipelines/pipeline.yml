@@ -1,5 +1,5 @@
 resources:
-  - name: code_analysis_resource
+  - name: code_analysis_resourcee
     type: CodeAnalysis
     configuration:
       integration: sonar_int
