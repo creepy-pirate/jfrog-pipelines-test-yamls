@@ -50,14 +50,11 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
-              - name: code_gitrepo
               - name: code_gitrepo_standalone
-          outputResources:
-              - name: code_analysis_resource
         execution:
           onExecute:
             - echo "Ran Code analysis step 2"
-            - write_output code_analysis_resource "gitResource=code_gitrepo"
+            - write_output code_analysis_resource "gitResource=code_gitrepo_standalone"
             - echo "shashank-taliwal"
             # - cd $res_code_gitrepo_resourcePath
             # - git checkout main
