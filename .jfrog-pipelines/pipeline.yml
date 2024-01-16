@@ -1,5 +1,5 @@
 pipelines:
-- name: test_pipeline
+- name: update_run_desc
   configuration:
     jfrogCliVersion: 2
   steps:
