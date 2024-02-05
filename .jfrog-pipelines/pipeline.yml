@@ -1,75 +1,27 @@
-resources:
-  - name: code_analysis_resource
-    type: CodeAnalysis
+resources: 
+  - name: myBuildInfo
+    type: BuildInfo
     configuration:
-      integration: sonar_int
-  - name: code_gitrepo
-    type: GitRepo
-    configuration:
-      path: creepy-pirate/jfrog-pipelines-test-yamls
-      gitProvider: deepak_git
-      branches:
-        include: master
-  - name: code_gitrepo_standalone
-    type: GitRepo
-    configuration:
-      path: creepy-pirate/jfrog-pipelines-test-yamls
-      gitProvider: deepak_git
-      branches:
-        include: master
+      sourceArtifactory: xray_test
+      buildName: S_DockerPush_8307_009
+      buildNumber: 361420
 
 pipelines:
-  - name: code_analysis_pipe
+  - name: test_xray_step_frontend
     configuration:
       jfrogCliVersion: 2
-      environmentVariables:
-        readOnly:
-          env2: "test_p2"
     steps:
-      # - name: pre_step
-      #   type: Bash
-      #   configuration:
-      #     outputResources:
-      #         - name: code_analysis_resource
-      #   execution:
-      #     onExecute:
-      #       - echo "Ran Code analysis step 1"
-      - name: trigger_1
-        type: Bash
+      - name: scan
+        type: XrayScan
         configuration:
-          inputResources:
-              - name: code_gitrepo
-              - name: code_gitrepo_standalone
-          outputResources:
-              - name: code_analysis_resource
+         #inherits all the tags from bash
+         failOnScan: true                    # default true
+         inputResources:
+           - name: myBuildInfo        # required
+             trigger: false
         execution:
-          onExecute:
-            - echo "Ran Code analysis step 2"
-            - write_output code_analysis_resource "gitResource=code_gitrepo"
-      - name: trigger_2
-        type: Bash
-        configuration:
-          inputResources:
-              - name: code_gitrepo_standalone
-        execution:
-          onExecute:
-            - echo "Ran Code analysis step 2"
-            - echo "shashank-taliwal"
-            # - cd $res_code_gitrepo_resourcePath
-            # - git checkout main
-            # - touch hello.txt
-            # - git add hello.txt
-            # - echo "hello" >> hello.txt
-            # - git commit -m "added hello.txt"
-            # - git push origin main
-           
-      # - name: trigger_2
-      #   type: Bash
-      #   configuration:
-      #     affinityGroup: trigger
-      #     timeoutSeconds: 5
-      #     inputSteps:
-      #       - name: pre_step
-      #   execution:
-      #     onExecute:
-      #       - echo $resource_new_2_path
+         onStart:
+           - echo "Preparing for work..."
+           - echo "Prepping build environment"
+         onSuccess:
+           - echo "Job well done!"
