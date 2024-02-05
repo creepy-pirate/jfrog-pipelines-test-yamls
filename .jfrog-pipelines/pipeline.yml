@@ -2,7 +2,7 @@ resources:
   - name: myBuildInfo
     type: BuildInfo
     configuration:
-      sourceArtifactory: xray_test
+      sourceArtifactory: art_xray
       buildName: S_DockerPush_8307_009
       buildNumber: 361420
 
