@@ -45,7 +45,7 @@ pipelines:
         execution:
           onExecute:
             - echo "Ran Code analysis step 2"
-            - write_output code_analysis_resource "gitResource=code_gitrepo"
+            - write_output code_analysis_resource "git_resource=code_gitrepo"
       - name: trigger_2
         type: Bash
         configuration:
