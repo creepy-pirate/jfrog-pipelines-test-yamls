@@ -1,75 +1,55 @@
 resources:
-  - name: code_analysis_resource
-    type: CodeAnalysis
-    configuration:
-      integration: sonar_int
-  - name: code_gitrepo
-    type: GitRepo
-    configuration:
-      path: creepy-pirate/jfrog-pipelines-test-yamls
-      gitProvider: deepak_git
-      branches:
-        include: master
-  - name: code_gitrepo_standalone
-    type: GitRepo
-    configuration:
-      path: creepy-pirate/jfrog-pipelines-test-yamls
-      gitProvider: deepak_git
-      branches:
-        include: master
+  - name: S_PromoteBuild_0009_input
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: s_artifactory
+      buildName: name
+      buildNumber: '1'
+  - name: S_PromoteBuild_0009_output
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: s_artifactory
+      buildName: name
+      buildNumber: '1'
 
 pipelines:
-  - name: code_analysis_pipe
-    configuration:
-      jfrogCliVersion: 2
-      environmentVariables:
-        readOnly:
-          env2: "test_p2"
-    steps:
-      # - name: pre_step
-      #   type: Bash
-      #   configuration:
-      #     outputResources:
-      #         - name: code_analysis_resource
-      #   execution:
-      #     onExecute:
-      #       - echo "Ran Code analysis step 1"
-      - name: trigger_1
-        type: Bash
-        configuration:
-          inputResources:
-              - name: code_gitrepo
-              - name: code_gitrepo_standalone
-          outputResources:
-              - name: code_analysis_resource
-        execution:
-          onExecute:
-            - echo "Ran Code analysis step 2"
-            - write_output code_analysis_resource "git_resource=code_gitrepo"
-      - name: trigger_2
-        type: Bash
-        configuration:
-          inputResources:
-              - name: code_gitrepo_standalone
-        execution:
-          onExecute:
-            - echo "Ran Code analysis step 2"
-            - echo "shashank-taliwal"
-            # - cd $res_code_gitrepo_resourcePath
-            # - git checkout main
-            # - touch hello.txt
-            # - git add hello.txt
-            # - echo "hello" >> hello.txt
-            # - git commit -m "added hello.txt"
-            # - git push origin main
-           
-      # - name: trigger_2
-      #   type: Bash
-      #   configuration:
-      #     affinityGroup: trigger
-      #     timeoutSeconds: 5
-      #     inputSteps:
-      #       - name: pre_step
-      #   execution:
-      #     onExecute:
-      #       - echo $resource_new_2_path
+  - name: PromoteBuild
+    steps:
+      - name: S_PromoteBuild_0009_1
+        type: Bash
+        configuration:
+          integrations:
+            - name: s_artifactory
+          outputResources:
+            - name: S_PromoteBuild_0009_input
+        execution:
+          onExecute:
+            - echo "${run_id}" > S_PromoteBuild_0009.txt
+            - jfrog rt upload S_PromoteBuild_0009.txt test-automation-generic-local
+            - jfrog rt build-publish ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}
+            - write_output S_PromoteBuild_0009_input buildName=${JFROG_CLI_BUILD_NAME} buildNumber=${JFROG_CLI_BUILD_NUMBER}
+      - name: PromoteBuild
+        type: PromoteBuild
+        configuration:
+          targetRepository: test-automation-generic-promoted-local
+          status: TEST
+          comment: "My test comment"
+          inputResources:
+            - name: S_PromoteBuild_0009_input
+          outputResources:
+            - name: S_PromoteBuild_0009_output
+      - name: S_PromoteBuild_0009_3
+        type: Bash
+        configuration:
+          integrations:
+            - name: s_artifactory
+          inputResources:
+            - name: S_PromoteBuild_0009_output
+        execution:
+          onExecute:
+            - jfrog rt curl -XGET /api/build/${JFROG_CLI_BUILD_NAME}/${JFROG_CLI_BUILD_NUMBER} -o ${step_tmp_dir}/response
+            - jfrog rt curl -XDELETE /api/build/${JFROG_CLI_BUILD_NAME}?buildNumbers=${JFROG_CLI_BUILD_NUMBER}&artifacts=1
+            - cat ${step_tmp_dir}/response
+            - myComment=$(cat ${step_tmp_dir}/response | jq -r '.buildInfo.statuses[0].comment')
+            - if [ $myComment != "My test comment" ] ; then return 1; fi
+
