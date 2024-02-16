@@ -26,14 +26,6 @@ pipelines:
         readOnly:
           env2: "test_p2"
     steps:
-      # - name: pre_step
-      #   type: Bash
-      #   configuration:
-      #     outputResources:
-      #         - name: code_analysis_resource
-      #   execution:
-      #     onExecute:
-      #       - echo "Ran Code analysis step 1"
       - name: trigger_1
         type: Bash
         configuration:
@@ -43,33 +35,13 @@ pipelines:
           outputResources:
               - name: code_analysis_resource
         execution:
-          onExecute:
-            - echo "Ran Code analysis step 2"
+          # onExecute:
+          #   - echo "Ran in onExcute"
+          #   - write_output code_analysis_resource "git_resource=code_gitrepo"
+          onSuccess:
+            - echo "Ran in onSuccess"
             - write_output code_analysis_resource "git_resource=code_gitrepo"
-      - name: trigger_2
-        type: Bash
-        configuration:
-          inputResources:
-              - name: code_gitrepo_standalone
-        execution:
-          onExecute:
-            - echo "Ran Code analysis step 2"
-            - echo "shashank-taliwal"
-            # - cd $res_code_gitrepo_resourcePath
-            # - git checkout main
-            # - touch hello.txt
-            # - git add hello.txt
-            # - echo "hello" >> hello.txt
-            # - git commit -m "added hello.txt"
-            # - git push origin main
-           
-      # - name: trigger_2
-      #   type: Bash
-      #   configuration:
-      #     affinityGroup: trigger
-      #     timeoutSeconds: 5
-      #     inputSteps:
-      #       - name: pre_step
-      #   execution:
-      #     onExecute:
-      #       - echo $resource_new_2_path
+          # onFailure:
+          #   - echo "Ran in onFailure"
+          #   - write_output code_analysis_resource "git_resource=code_gitrepo"
+     
