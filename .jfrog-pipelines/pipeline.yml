@@ -35,13 +35,13 @@ pipelines:
           outputResources:
               - name: code_analysis_resource
         execution:
-          # onExecute:
-          #   - echo "Ran in onExcute"
+          onExecute:
+            - end_step failure
           #   - write_output code_analysis_resource "git_resource=code_gitrepo"
-          onSuccess:
-            - echo "Ran in onSuccess"
+          # onSuccess:
+          #   - echo "Ran in onSuccess"
+          #   - write_output code_analysis_resource "git_resource=code_gitrepo"
+          onFailure:
+            - echo "Ran in onFailure"
             - write_output code_analysis_resource "git_resource=code_gitrepo"
-          # onFailure:
-          #   - echo "Ran in onFailure"
-          #   - write_output code_analysis_resource "git_resource=code_gitrepo"
      
