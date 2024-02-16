@@ -43,5 +43,5 @@ pipelines:
           #   - write_output code_analysis_resource "git_resource=code_gitrepo"
           onFailure:
             - echo "Ran in onFailure"
-            - write_output code_analysis_resource "git_resource=code_gitrepo"
+            - write_output code_analysis_resource "git_resource=hrllo"
      
