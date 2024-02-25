@@ -1,5 +1,5 @@
 resources:
-  - name: env_params
+  - name: env_paramss
     type: PropertyBag
     configuration:
       xsc_ci_config_branch_name: ''
@@ -19,7 +19,7 @@ pipelines:
       type: Bash
       configuration:
         outputResources:
-          - name: env_params
+          - name: env_paramss
         environmentVariables:
           JF_URL: 'https://$D2C_SERVER_NAME.jfrogdev.org/'
           JF_USER: $int_xsc_e2e_settings_d2c_instance_user
@@ -40,4 +40,4 @@ pipelines:
           - update_run_description "updated run descr from onStart section"
         onExecute:
           - update_run_description "updated run descr from onExecute section"
-          - write_output "env_params" "jf_msi=$msi"
+          - write_output "env_paramss" "jf_msi=$msi"
