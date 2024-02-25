@@ -6,20 +6,20 @@ pipelines:
     - name: test_step
       type: Bash
       configuration:
-      environmentVariables:
-        JF_URL: 'https://$D2C_SERVER_NAME.jfrogdev.org/'
-        JF_USER: $int_xsc_e2e_settings_d2c_instance_user
-        JF_PASSWORD: $int_xsc_e2e_settings_d2c_instance_password
-        JF_GIT_TOKEN: $int_xsc_github_token
-        JF_GIT_PROVIDER: github
-        JF_GIT_API_ENDPOINT: $int_xsc_github_url
-        JF_GIT_OWNER: orz25
-        JF_GIT_REPO: lets-be-bad-guys
-        JF_GIT_BASE_BRANCH: master
-        JF_REQUIREMENTS_FILE: requirements.txt
-        JF_BRANCH_NAME_TEMPLATE: '''bugfix/XRAY-123-{BRANCH_NAME_HASH}'''
-        JF_COMMIT_MESSAGE_TEMPLATE: '''XRAY-123 - Upgrade {IMPACTED_PACKAGE} to {FIX_VERSION}'''
-        JFROG_CLI_LOG_LEVEL: DEBUG
+        environmentVariables:
+          JF_URL: 'https://$D2C_SERVER_NAME.jfrogdev.org/'
+          JF_USER: $int_xsc_e2e_settings_d2c_instance_user
+          JF_PASSWORD: $int_xsc_e2e_settings_d2c_instance_password
+          JF_GIT_TOKEN: $int_xsc_github_token
+          JF_GIT_PROVIDER: github
+          JF_GIT_API_ENDPOINT: $int_xsc_github_url
+          JF_GIT_OWNER: orz25
+          JF_GIT_REPO: lets-be-bad-guys
+          JF_GIT_BASE_BRANCH: master
+          JF_REQUIREMENTS_FILE: requirements.txt
+          JF_BRANCH_NAME_TEMPLATE: '''bugfix/XRAY-123-{BRANCH_NAME_HASH}'''
+          JF_COMMIT_MESSAGE_TEMPLATE: '''XRAY-123 - Upgrade {IMPACTED_PACKAGE} to {FIX_VERSION}'''
+          JFROG_CLI_LOG_LEVEL: DEBUG
       execution:
         onStart:
           - echo "chala"
