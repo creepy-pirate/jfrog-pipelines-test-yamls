@@ -1,3 +1,15 @@
+resources:
+  - name: env_params
+    type: PropertyBag
+    configuration:
+      xsc_ci_config_branch_name: ''
+      d2c_server_name: ''
+      d2c_url: ''
+      d2c_job_extra_params: ''
+      cell_id: ''
+      docker_repo_name: ''
+      jf_msi: ''
+
 pipelines:
 - name: check_env_variables
   configuration:
@@ -6,6 +18,8 @@ pipelines:
     - name: test_step
       type: Bash
       configuration:
+        outputResources:
+          - name: env_params
         environmentVariables:
           JF_URL: 'https://$D2C_SERVER_NAME.jfrogdev.org/'
           JF_USER: $int_xsc_e2e_settings_d2c_instance_user
@@ -26,3 +40,4 @@ pipelines:
           - update_run_description "updated run descr from onStart section"
         onExecute:
           - update_run_description "updated run descr from onExecute section"
+          - write_output "env_params" "jf_msi=$msi"
