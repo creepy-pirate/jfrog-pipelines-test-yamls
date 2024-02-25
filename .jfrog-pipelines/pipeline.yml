@@ -1,75 +1,28 @@
-resources:
-  - name: code_analysis_resource
-    type: CodeAnalysis
-    configuration:
-      integration: sonar_int
-  - name: code_gitrepo
-    type: GitRepo
-    configuration:
-      path: creepy-pirate/jfrog-pipelines-test-yamls
-      gitProvider: deepak_git
-      branches:
-        include: master
-  - name: code_gitrepo_standalone
-    type: GitRepo
-    configuration:
-      path: creepy-pirate/jfrog-pipelines-test-yamls
-      gitProvider: deepak_git
-      branches:
-        include: master
-
 pipelines:
-  - name: code_analysis_pipe
-    configuration:
-      jfrogCliVersion: 2
+- name: check_env_variables
+  configuration:
+    jfrogCliVersion: 2
+  steps:
+    - name: test_step
+      type: Bash
+      configuration:
       environmentVariables:
-        readOnly:
-          env2: "test_p2"
-    steps:
-      # - name: pre_step
-      #   type: Bash
-      #   configuration:
-      #     outputResources:
-      #         - name: code_analysis_resource
-      #   execution:
-      #     onExecute:
-      #       - echo "Ran Code analysis step 1"
-      - name: trigger_1
-        type: Bash
-        configuration:
-          inputResources:
-              - name: code_gitrepo
-              - name: code_gitrepo_standalone
-          outputResources:
-              - name: code_analysis_resource
-        execution:
-          onExecute:
-            - echo "Ran Code analysis step 2"
-            - write_output code_analysis_resource "git_resource=code_gitrepo"
-      - name: trigger_2
-        type: Bash
-        configuration:
-          inputResources:
-              - name: code_gitrepo_standalone
-        execution:
-          onExecute:
-            - echo "Ran Code analysis step 2"
-            - echo "shashank-taliwal"
-            # - cd $res_code_gitrepo_resourcePath
-            # - git checkout main
-            # - touch hello.txt
-            # - git add hello.txt
-            # - echo "hello" >> hello.txt
-            # - git commit -m "added hello.txt"
-            # - git push origin main
-           
-      # - name: trigger_2
-      #   type: Bash
-      #   configuration:
-      #     affinityGroup: trigger
-      #     timeoutSeconds: 5
-      #     inputSteps:
-      #       - name: pre_step
-      #   execution:
-      #     onExecute:
-      #       - echo $resource_new_2_path
+        JF_URL: 'https://$D2C_SERVER_NAME.jfrogdev.org/'
+        JF_USER: $int_xsc_e2e_settings_d2c_instance_user
+        JF_PASSWORD: $int_xsc_e2e_settings_d2c_instance_password
+        JF_GIT_TOKEN: $int_xsc_github_token
+        JF_GIT_PROVIDER: github
+        JF_GIT_API_ENDPOINT: $int_xsc_github_url
+        JF_GIT_OWNER: orz25
+        JF_GIT_REPO: lets-be-bad-guys
+        JF_GIT_BASE_BRANCH: master
+        JF_REQUIREMENTS_FILE: requirements.txt
+        JF_BRANCH_NAME_TEMPLATE: '''bugfix/XRAY-123-{BRANCH_NAME_HASH}'''
+        JF_COMMIT_MESSAGE_TEMPLATE: '''XRAY-123 - Upgrade {IMPACTED_PACKAGE} to {FIX_VERSION}'''
+        JFROG_CLI_LOG_LEVEL: DEBUG
+      execution:
+        onStart:
+          - echo "chala"
+          - update_run_description "updated run descr from onStart section"
+        onExecute:
+          - update_run_description "updated run descr from onExecute section"
