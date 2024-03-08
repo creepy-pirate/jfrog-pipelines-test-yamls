@@ -8,6 +8,6 @@ pipelines:
       execution:
         onStart:
           - echo "chala"
-          - update_run_description "updated run descr from onStart section"
-        onExecute:
-          - update_run_description "updated run descr from onExecute section"
+          # - update_run_description "updated run descr from onStart section"
+        # onExecute:
+          # - update_run_description "updated run descr from onExecute section"
